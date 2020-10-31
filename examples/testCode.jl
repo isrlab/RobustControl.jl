@@ -1,10 +1,5 @@
 # Code to test basic functionality and plotting
-# using RobustControl, LinearAlgebra
-include("RobustControl.jl");
-
-# include("StateSpace.jl");
-# include("Utilities.jl");
-# include("Response.jl");
+using RobustControl, LinearAlgebra
 
 A = [0 1;-1 -1];
 B = reshape([0;1],2,1);
