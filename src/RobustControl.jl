@@ -7,5 +7,4 @@ include("Realization.jl");
 include("Response.jl");
 include("StateSpace.jl");
 include("Utilities.jl");
-
 end # module
