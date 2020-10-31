@@ -1,5 +1,5 @@
 module RobustControl
-using LinearAlgebra, PyPlot
+using LinearAlgebra, PyPlot, Printf
 
 # include all the files
 include("StateSpace.jl");
@@ -9,6 +9,4 @@ include("Plotting.jl");
 include("Interconnections.jl");
 include("ModelReduction.jl");
 include("Realization.jl");
-
-
 end # module
