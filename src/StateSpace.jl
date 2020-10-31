@@ -1,6 +1,3 @@
-using LinearAlgebra
-using Printf
-
 mutable struct StateSpace
     A::Matrix{Float64}
     B::Matrix{Float64}

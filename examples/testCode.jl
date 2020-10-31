@@ -1,5 +1,5 @@
 # Code to test basic functionality and plotting
-using RobustControl, LinearAlgebra
+using RobustControl
 
 A = [0 1;-1 -1];
 B = reshape([0;1],2,1);
