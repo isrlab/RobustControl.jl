@@ -1,6 +1,8 @@
 # Plotting routines -- uses PyPlot
+
 include("Utilities.jl");
 include("Response.jl");
+
 
 # Bodemag with frsp and om given
 function BodeMagPlot(freqResponse::Vector{ComplexF64},om::Vector{Float64})

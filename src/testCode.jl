@@ -1,5 +1,8 @@
 # Code to test basic functionality and plotting
-using RobustControl, LinearAlgebra
+# using RobustControl, LinearAlgebra
+include("RobustControl.jl");
+# using LinearAlgebra, PyPlot
+
 
 # include("StateSpace.jl");
 # include("Utilities.jl");
@@ -23,10 +26,10 @@ G,om = RobustControl.FrequencyResponse(s,1,1);
 om1 = RobustControl.logspace(1E-2,1E2,200);
 G1 = RobustControl.FrequencyResponse(s,2,1,om1);
 
-# Test plots
+## Test plots
 #using PyPlot # We will be using PyPlot for all our plotting needs.
 # include("Plotting.jl"); #close("all")
-figure(1);clf();
+figure(1);clf(); pygui(true);
 subplot(2,1,1);
 RobustControl.BodeMagPlot(G,om); title("Bode Mag Plot");
 RobustControl.BodeMagPlot(G1,om1);
@@ -35,7 +38,7 @@ legend(["G1","G2"]);
 tight_layout();
 
 
-# Another way to get Bode plots -- just magnitude.
+## Another way to get Bode plots -- just magnitude.
 subplot(2,1,2);
 RobustControl.BodeMagPlot(s,1,1);
 RobustControl.BodeMagPlot(s,2,1);
@@ -43,7 +46,7 @@ grid(which="both",color=[1,1,1]*0.9,linewidth=0.35)
 legend(["G1","G2"]);
 tight_layout();
 
-# 3rd way -- get both mag and phase in one plot
+## 3rd way -- get both mag and phase in one plot
 figure(2); clf();
 RobustControl.BodePlot(s,1,1);
 RobustControl.BodePlot(s,2,1);
