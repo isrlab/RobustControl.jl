@@ -1,4 +1,6 @@
 module RobustControl
+using LinearAlgebra, PyPlot
+
 # include all the files
 include("Interconnections.jl");
 include("ModelReduction.jl");
