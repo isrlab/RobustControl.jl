@@ -1,8 +1,6 @@
 # Code to test basic functionality and plotting
 # using RobustControl, LinearAlgebra
 include("RobustControl.jl");
-# using LinearAlgebra, PyPlot
-
 
 # include("StateSpace.jl");
 # include("Utilities.jl");
@@ -27,8 +25,6 @@ om1 = RobustControl.logspace(1E-2,1E2,200);
 G1 = RobustControl.FrequencyResponse(s,2,1,om1);
 
 ## Test plots
-#using PyPlot # We will be using PyPlot for all our plotting needs.
-# include("Plotting.jl"); #close("all")
 figure(1);clf(); pygui(true);
 subplot(2,1,1);
 RobustControl.BodeMagPlot(G,om); title("Bode Mag Plot");
