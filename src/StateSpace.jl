@@ -60,7 +60,7 @@ function Damping(S::StateSpace)::Vector{Float64}
     ri = real.(lam);
     ii = imag.(lam);
     om = sqrt.(ri.^2 + ii.^2);
-    d = abs.(rr./om);
+    d = abs.(ri./om);
     return(d);
 end
 

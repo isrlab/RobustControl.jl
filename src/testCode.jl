@@ -1,5 +1,5 @@
 # Code to test basic functionality and plotting
-using RobustControl
+using RobustControl, LinearAlgebra
 
 # include("StateSpace.jl");
 # include("Utilities.jl");
@@ -7,10 +7,10 @@ using RobustControl
 
 A = [0 1;-1 -1];
 B = reshape([0;1],2,1);
-C = eye(2);
+C = RobustControl.eye(2);
 D = reshape([0;0],2,1);;
 s = RobustControl.StateSpace(A,B,C);
-rr,ii,om,d = rifd(s);
+rr,ii,om,d = RobustControl.rifd(s);
 z = RobustControl.TransmissionZeros(s,2,1);
 p = RobustControl.Poles(s);
 d = RobustControl.Damping(s);
