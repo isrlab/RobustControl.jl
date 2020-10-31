@@ -1,0 +1,11 @@
+name = "RobustControl"
+uuid = "ab2fe980-f51e-4b45-a8d6-6db72b459004"
+authors = ["Intelligent Systems Research Laboratory <raktim@tamu.edu>"]
+version = "0.1.0"
+
+[deps]
+Convex = "f65535da-76fb-5f13-bab9-19810c17039a"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+MosekTools = "1ec41992-ff65-5c91-ac43-2df89e9693a4"
+PyPlot = "d330b81b-6aea-500a-939a-2ce795aea3ee"
+SCS = "c946c3f1-0d1f-5ce8-9dea-7daa1f7e2d13"
