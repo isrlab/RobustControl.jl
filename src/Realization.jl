@@ -12,8 +12,6 @@ end
 
 function KalmanDecomposition(S::StateSpace)::StateSpace
     # Todo
-
-
 end
 
 function ModalForm(S::StateSpace)::StateSpace
