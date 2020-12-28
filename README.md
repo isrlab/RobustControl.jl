@@ -6,4 +6,4 @@ The synthesis is formulated as a convex optimization problem, which is solved us
 
 Some functions have been implemented. See testCode.jl under src/ to see basic analysis usage. 
 
-This toolbox is not ready for use yet. Please stay tuned.
+This toolbox is not ready for use yet. Please stay tuned. This is under heavy development.
