@@ -15,7 +15,7 @@ Pkg.add("https://github.com/isrlab/RobustControl");
 
 ```
 # Usage
-See under examples/ 
+
 
 ``` julia
 # Code to test basic functionality and plotting
