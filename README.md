@@ -9,9 +9,11 @@ Some functions have been implemented. See testCode.jl under src/ to see basic an
 This toolbox is not ready for use yet. Please stay tuned. This is under heavy development.
 
 # Installation 
+``` julia
 
 Pkg.add("https://github.com/isrlab/RobustControl");
 
+```
 # Usage
 
 ``` julia
