@@ -1,4 +1,4 @@
-<img src="https://isrlab.github.io/images/julia%20robust%20control%20library.png" alt="Julia RCS Logo" width="350"/>
+<img src="https://isrlab.github.io/assets/images/julia%20robust%20control%20library.png" alt="Julia RCS Logo" width="350"/>
 
 This is a robust control toolbox in Julia. The goal is to provide necessary functions for designing H2/Hinf controllers and estimators with model uncertainty.
 
