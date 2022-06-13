@@ -1,5 +1,5 @@
 module RobustControl
-using LinearAlgebra, PyPlot, Printf
+using LinearAlgebra, Plots, Printf, Convex
 
 # include all the files
 include("StateSpace.jl");
