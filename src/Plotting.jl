@@ -1,6 +1,6 @@
-# Plotting routines -- uses PyPlot
+# Plotting routines -- uses Plots
 
-using PyPlot
+using Plots
 
 # Bodemag with frsp and om given
 function BodeMagPlot(freqResponse::Vector{ComplexF64},om::Vector{Float64})
