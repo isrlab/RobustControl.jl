@@ -1,8 +1,5 @@
 # Interconnections of linear systems
 
-# include("StateSpace.jl");
-# include("Utilities.jl");
-
 function Negate(S::StateSpace)::StateSpace
     return StateSpace(S.A,S.B,-S.C,-S.D);
 end
@@ -79,8 +76,8 @@ function Feedback(S1::StateSpace,S2::StateSpace)::StateSpace
     return StateSpace(AA,BB,CC,DD);
 end
 
-# Need to implement partial interconnections.
-# Eventually, these will replace the above code.
+# More general interconnections
+# =============================
 
 function Parallel(S1::StateSpace,S2::StateSpace,
     in1::Vector{Int64}, in2::Vector{Int64},
@@ -317,4 +314,4 @@ end
 
 # TO DO
 # 1. Linear fractional transformation, and LFT algebra.
-# LinearFractionalTransformation(...) -- uppper and lower.
+# LinearFractionalTransformation(...) -- upper and lower.
