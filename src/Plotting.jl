@@ -1,5 +1,6 @@
 # Plotting routines -- uses Plots. Not using PyPlot Directly.
 # Bodemag with frsp and om given
+
 function BodeMagPlot(freqResponse::Vector{ComplexF64},om::Vector{Float64})
     p = plot(om, abs.(freqResponse), xaxis=:log, yaxis=:log, label=:none, xlabel="Frequency (rad/s)", ylabel = "Magnitude");
     return p
@@ -58,8 +59,8 @@ function NyquistPlot(sys::StateSpace,no::Integer, ni::Integer, om::Vector{Float6
     p = plot(real.(f1),imag.(f1),color=:red,label="Positive"); # Positive ω
     plot!(real.(f2),imag.(f2),label="Negative"); # Negative ω
     plot!(xlabel="Real", ylabel = "Imaginary");
-    scatter!([real(f1[1])],[imag(f1[1])],color=:white); #label=L"\omega = 0")
-    scatter!([real(f1[end])],[imag(f1[end])],color=:black); #label=L"\omega = \pm \infty")        
+    scatter!([real(f1[1])],[imag(f1[1])],color=:white,label=L"\omega = 0")
+    scatter!([real(f1[end])],[imag(f1[end])],color=:black,label=L"\omega = \pm \infty")        
     return p
 end
 

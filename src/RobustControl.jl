@@ -1,5 +1,5 @@
 module RobustControl
-using LinearAlgebra, Plots, Printf, Convex
+using LinearAlgebra, Plots, Printf, Convex, LaTeXStrings
 
 # include all the files
 include("StateSpace.jl");
