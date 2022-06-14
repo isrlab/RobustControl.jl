@@ -8,14 +8,15 @@ Some functions have been implemented. See examples/testCode.jl for basic analysi
 
 <!-- This toolbox is not ready for use yet. Please stay tuned. This is under heavy development. -->
 
-# Installation 
+# Installation
+
 ``` julia
 
 Pkg.add("https://github.com/isrlab/RobustControl");
 
 ```
-# Usage
 
+# Usage
 
 ``` julia
 # Code to test basic functionality and plotting
@@ -78,6 +79,7 @@ display(p)
 ```
 
 ## Output of the above code
+
 ![](images/BodeMag.png)
 
 ![](images/Nyquist.png)
