@@ -60,7 +60,8 @@ function NyquistPlot(sys::StateSpace,no::Integer, ni::Integer, om::Vector{Float6
     plot!(real.(f2),imag.(f2),label="Negative"); # Negative ω
     plot!(xlabel="Real", ylabel = "Imaginary");
     scatter!([real(f1[1])],[imag(f1[1])],color=:white,label=L"\omega = 0")
-    scatter!([real(f1[end])],[imag(f1[end])],color=:black,label=L"\omega = \pm \infty")        
+    scatter!([real(f1[end])],[imag(f1[end])],color=:black,label=L"\omega = \pm \infty")
+    scatter!([-1],[0],color=:red,markershape=:star,label=:none)
     return p
 end
 
