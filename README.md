@@ -4,7 +4,7 @@ This is a robust control toolbox in Julia. The goal is to provide necessary func
 
 The synthesis is formulated as a convex optimization problem, which is solved using JuMP/Convex. Future version will also interface with SLICOT.
 
-Some functions have been implemented. See testCode.jl under src/ to see basic analysis usage.
+Some functions have been implemented. See examples/testCode.jl for basic analysis usage.
 
 <!-- This toolbox is not ready for use yet. Please stay tuned. This is under heavy development. -->
 

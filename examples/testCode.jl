@@ -50,7 +50,7 @@ x0 = [1.0;0.0];
 # t,y = RobustControl.InitialResponse(s,x0); # Auto time grid
 t = Vector(0:0.01:10);
 y = RobustControl.InitialResponse(s,x0,t); # Specified time grid
-p4 = plot(t,y,xlabel="Time (s)", layout=(1,2), 
+p4 = plot(t,y,xlabel="Time (s)", layout=(1,2),
      label = [L"x_1" L"x_2"],title = "Initial Response", yminorgrid=:false,
      legend=[:topright :bottomright]); 
 
