@@ -45,12 +45,11 @@ om1 = RobustControl.logspace(1E-2,1E2,200);
 G1 = RobustControl.FrequencyResponse(s,1,1,om1);
 
 # Test plots
-p1 = plot(RobustControl.BodeMagPlot(G,om),title="G1"); 
-p2 = plot(RobustControl.BodeMagPlot(G,om),title="G2"); 
-display(plot(p1,p2));
+p1 = plot(RobustControl.BodeMagPlot(G,om),title="Bode Magnitude Plot of G(1,1)"); 
+display(p1);
 
 # Nyquist Plot
-p = RobustControl.NyquistPlot(s,1,1);
+p = plot(RobustControl.NyquistPlot(s,1,1),title="Nyquist Plot of G(1,1)");
 display(p);
 
 # System Responses
@@ -71,9 +70,16 @@ x0 = [1.0;0.0];
 t = Vector(0:0.01:10);
 y = RobustControl.InitialResponse(s,x0,t); # Specified time grid
 p4 = plot(t,y,xlabel="Time (s)", layout=(1,2), 
-     label = [L"x_1" L"x_2"],title = "Initial Response", yminorgrid=:false,
+     label = [L"x_1" L"x_2"],title = "IC Response", yminorgrid=:false,
      legend=[:topright :bottomright]); 
 
 p = plot(p1,p2,p3,p4,layout = (2,2));
 display(p)
 ```
+
+## Output of the above code
+![](images/BodeMag.png)
+
+![](images/Nyquist.png)
+
+![](images/VariousResponses.png)
