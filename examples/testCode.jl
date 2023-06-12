@@ -1,21 +1,23 @@
 # Code to test basic functionality and plotting
-using RobustControl, Plots, LaTeXStrings
+using RobustControl, Plots, LaTeXStrings, LinearAlgebra
 
 default(titlefontsize = 10, legendfontsize = 8, labelfontsize=8, guidefont = (8, :black), 
 tickfont = (6, :black), framestyle = :default, minorticks=:true , label=:none, 
 yminorgrid = true, xminorgrid=true, xlabel = "", ylabel = "", linewidth=1, color=:dodgerblue2);
 
 
-A = [0 1;-1 -1];
+A = [0 1;-5 -2];
 B = reshape([0;1],2,1);
-C = RobustControl.eye(2);
-D = reshape([0;0],2,1);;
+C = I(2);
+D = reshape([0;0],2,1);
 s = RobustControl.StateSpace(A,B,C);
+
 rr,ii,om,d = RobustControl.rifd(s);
 z = RobustControl.TransmissionZeros(s,2,1);
 p = RobustControl.Poles(s);
 d = RobustControl.Damping(s);
 om = RobustControl.NaturalFrequencies(s);
+
 
 # Frequency response with auto frequency grid.
 G,om = RobustControl.FrequencyResponse(s,1,1);
@@ -61,4 +63,4 @@ p4 = plot(t,y,xlabel="Time (s)", layout=(1,2),
 
 p = plot(p1,p2,p3,p4,layout = (2,2));
 display(p)
-savefig("images/VariousResponses.png")
+# savefig("images/VariousResponses.png")

@@ -1,15 +1,12 @@
 # Utilities for Robust Control Toolbox
 using LinearAlgebra
 
-function eye(n)::Matrix{AbstractFloat}
-	return Matrix{AbstractFloat}(I, n, n)
-end
 
-function linspace(x1::AbstractFloat,x2::AbstractFloat,N::Integer)::Vector{AbstractFloat}
+function linspace(x1::T,x2::T,N::Integer)::Vector{T} where T<: Real
    return LinRange(x1,x2,N);
 end
 
-function logspace(x1::AbstractFloat,x2::AbstractFloat,N::Integer)::Vector{AbstractFloat}
+function logspace(x1::T,x2::T,N::Integer) where T<: Real
     if min(x1,x2) <= 0
         error("logspace is undefined for negative values");
         return([]);
