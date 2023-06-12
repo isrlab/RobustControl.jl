@@ -1,13 +1,13 @@
 # Plotting routines -- uses Plots. Not using PyPlot Directly.
 # Bodemag with frsp and om given
 
-function BodeMagPlot(freqResponse::Vector{ComplexF64},om::Vector{AbstractFloat})
+function BodeMagPlot(freqResponse,om)
     p = plot(om, abs.(freqResponse), xaxis=:log, yaxis=:log, label=:none, xlabel="Frequency (rad/s)", ylabel = "Magnitude");
     return p
 end
 
 # Bodemag directly from system
-function BodeMagPlot(sys::StateSpace,no::Integer, ni::Integer, om::Vector{AbstractFloat}=Array{AbstractFloat}(undef,0))
+function BodeMagPlot(sys::StateSpace,no::Integer, ni::Integer, om=Vector(undef,0))
     if (ni>sys.nu) error("Input index exceeds number of system inputs") end
     if (no>sys.ny) error("Output index exceeds number of system output") end
 
@@ -20,20 +20,20 @@ function BodeMagPlot(sys::StateSpace,no::Integer, ni::Integer, om::Vector{Abstra
 end
 
 # Bode phase with frsp and om given -- this method should be sufficient. Other methods are not necessary.
-function BodePhasePlot(freqResponse::Vector{ComplexF64},om::Vector{AbstractFloat})
+function BodePhasePlot(freqResponse,om)
     phase = 180*atan.(imag.(freqResponse),real.(freqResponse))/pi; # Convert it to [-180,180]
     p = plot(om, phase, xaxis=:log, yaxis=:log, label=:none, xlabel="Frequency (rad/s)", ylabel = "Phase (deg)");
     return p;
 end
 
-function BodePlot(freqResponse::Vector{ComplexF64},om::Vector{AbstractFloat})
+function BodePlot(freqResponse,om)
     p1 = BodeMagPlot(freqResponse,om);
     p2 = BodePhasePlot(freqResponse,om);
     return p1,p2;
 end
 
 # Bodemag directly from system
-function BodePlot(sys::StateSpace,no::Integer, ni::Integer, om::Vector{AbstractFloat}=Array{AbstractFloat}(undef,0))
+function BodePlot(sys::StateSpace,no::Integer, ni::Integer, om=Vector(undef,0))
     if (ni>sys.nu) error("Input index exceeds number of system inputs") end
     if (no>sys.ny) error("Output index exceeds number of system output") end
 
@@ -45,7 +45,7 @@ function BodePlot(sys::StateSpace,no::Integer, ni::Integer, om::Vector{AbstractF
     return BodePlot(freqResponse,om);
 end
 
-function NyquistPlot(sys::StateSpace,no::Integer, ni::Integer, om::Vector{AbstractFloat}=Array{AbstractFloat}(undef,0))
+function NyquistPlot(sys::StateSpace,no::Integer, ni::Integer, om=Vector(undef,0))
     if (ni>sys.nu) error("Input index exceeds number of system inputs") end
     if (no>sys.ny) error("Output index exceeds number of system output") end
 

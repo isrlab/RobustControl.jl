@@ -1,3 +1,5 @@
+using Printf
+
 mutable struct StateSpace
     A::Matrix{AbstractFloat}
     B::Matrix{AbstractFloat}
@@ -82,15 +84,16 @@ function rifd(S::StateSpace,printFlag::Bool=false)
     return(rr,ii,om,d)
 end
 
-function TransmissionZeros(S::StateSpace,no::Integer,ni::Integer)::Vector{AbstractFloat}
+function TransmissionZeros(S::StateSpace,no::Integer,ni::Integer)::Vector
 
     CheckIODimensions(S,no,ni);
 
+    nx = size(S.A)[1];
     B = S.B[:,ni];
     C = reshape(S.C[no,:],1,length(S.C[no,:])); # Must ensure row vector
     D = S.D[no,ni];
     L = [S.A B; C D];
-    II = Matrix{AbstractFloat}(I, size(S.A)[1], size(S.A)[2]);
+    II =I(nx)
     M = [II 0*B;0*C 0*D];
     e,v = eigen(L,M);
     z = filter(x-> x!=Inf,e)

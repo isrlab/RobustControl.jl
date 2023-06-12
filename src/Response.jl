@@ -2,23 +2,19 @@
 using LinearAlgebra
 
 # Frequency response at user specified frequencies
-function FrequencyResponse(sys::StateSpace,no::Integer,ni::Integer, Om::Array{AbstractFloat,1})::Vector{ComplexF64}
+function FrequencyResponse(sys::StateSpace,no::Integer,ni::Integer, Om::Vector{T}) where T <: Number
     CheckIODimensions(sys,no,ni);
 
     B = sys.B[:,ni];
     C = reshape(sys.C[no,:],1,length(sys.C[no,:])); # Must ensure row vector
     D = sys.D[no,ni];
-    I = im*eye(size(sys.A)[1]);
-    TF = Vector{ComplexF64}(undef,length(Om));
-    for (i,om) in enumerate(Om)
-        G = C*inv(om*I-sys.A)*B; # This is vector of one element
-        TF[i] = G[1]+D; # that is why we need G[1], otherwise the addition is across different types.
-    end
-    return(TF);
+    
+    G = om->C*inv(om*im*I(size(sys.A)[1])-sys.A)*B .+ D;
+    return vcat(G.(Om)...)
 end
 
 # Frequency response with no user specified om. This makes an adhoc grid between [1E-3 100*wn.max], with 300 points.
-function FrequencyResponse(sys::StateSpace,no::Integer,ni::Integer)::Tuple{Array{Complex{AbstractFloat},1},Array{AbstractFloat,1}}
+function FrequencyResponse(sys::StateSpace,no::Integer,ni::Integer) 
 
     CheckIODimensions(sys,no,ni);
 
@@ -26,37 +22,28 @@ function FrequencyResponse(sys::StateSpace,no::Integer,ni::Integer)::Tuple{Array
     lmax = maximum(abs.(l)); # Find highest natural frequency
     Om = logspace(1E-3,lmax*100,300); # Making adhoc decision about 100 times highest natural frequency.
 
-    B = sys.B[:,ni];
-    C = reshape(sys.C[no,:],1,length(sys.C[no,:])); # Must ensure row vector
-    D = sys.D[no,ni];
-    I = im*eye(size(sys.A)[1]);
-    TF = Vector{ComplexF64}(undef,length(Om));
-    for (i,om) in enumerate(Om)
-        G = C*inv(om*I-sys.A)*B; # This is vector of one element ...
-        TF[i] = G[1]+D; # ... that is why we need G[1], otherwise the addition is across different types.
-    end
-    return(TF,Om);
+    return (FrequencyResponse(sys,no,ni,Om),Om)
 end
 
-function StepResponse(sys::StateSpace,no::Integer,ni::Integer)::Tuple{Array{AbstractFloat,1}, Array{AbstractFloat,1}}
+function StepResponse(sys::StateSpace,no::Integer,ni::Integer,x0)
     l,ev = eigen(sys.A);
     lmin = minimum(abs.(l)); # Find the slowest mode
     lmax = maximum(abs.(l)); # Find the fastest mode
     tmax = 2.5*(2*pi)/lmin; # Quite adhoc -- 10 times the slowest time-constant.
     dt =  (2*pi)/lmax/50; # Quite adhoc -- Sampling is 50 times the fastest mode.
-    t = Vector(0:dt:tmax);
+    t = 0:dt:tmax;
     u = ones(length(t));
-    y = ForcedResponse(sys,no,ni,t,u);
+    y = ForcedResponse(sys,no,ni,t,u,x0);
     return(t,y);
 end
 
-function StepResponse(sys::StateSpace,no::Integer,ni::Integer,t::Vector{AbstractFloat})::Vector{AbstractFloat}
+function StepResponse(sys::StateSpace,no::Integer,ni::Integer,t,x0)
     u = ones(length(t));
-    y = ForcedResponse(sys,no,ni,t,u);
+    y = ForcedResponse(sys,no,ni,t,u,x0);
     return(y);
 end
 
-function ForcedResponse(sys::StateSpace,no::Integer,ni::Integer,t::Vector{AbstractFloat},u::Vector{AbstractFloat},x0::Vector{AbstractFloat}=Array{AbstractFloat}(undef,0))::Vector{AbstractFloat}
+function ForcedResponse(sys::StateSpace,no::Integer,ni::Integer,t,u,x0)
     CheckIODimensions(sys,no,ni);
 
     # Obtain a discrete-time system.
@@ -67,50 +54,43 @@ function ForcedResponse(sys::StateSpace,no::Integer,ni::Integer,t::Vector{Abstra
     B = sys.B[:,ni];
     C = reshape(sys.C[no,:],1,length(sys.C[no,:])); # Must ensure row vector
     D = sys.D[no,ni];
-
-    M = dt*[sys.A B; zeros(1,ns+1)]
-    S = exp(M);
-    F = S[1:ns,1:ns];
-    G = S[1:ns,ns+1:ns+1];
-
-    # Check initial condition
-    if isempty(x0)
-        x = zeros(ns);
-    else
-        x = x0;
-    end
+    x = x0;
 
     # Time march
     y = similar(t);
-    for i = 1:length(t)
+    for i in eachindex(t)
         y[i] = (C*x)[1] + D*u[i];
-        x = F*x + G*u[i];
+        if i < length(t)
+            dt = t[i+1] - t[i]
+            M = dt*[sys.A B; zeros(1,ns+1)]
+            S = exp(M);
+            F = S[1:ns,1:ns];
+            G = S[1:ns,ns+1:ns+1];
+            x = F*x + G*u[i];
+        end
     end
     return(y);
 end
 
-function ImpulseResponse(sys::StateSpace,no::Integer,ni::Integer)::Tuple{Array{AbstractFloat,1}, Array{AbstractFloat,1}}
+function ImpulseResponse(sys::StateSpace,no::Integer,ni::Integer)
     l,ev = eigen(sys.A);
     lmin = minimum(abs.(l)); # Find the slowest mode
     lmax = maximum(abs.(l)); # Find the fastest mode
     tmax = 2.5*(2*pi)/lmin; # Quite adhoc -- 2.5 times the slowest time-constant.
     dt =  (2*pi)/lmax/50; # Quite adhoc -- Sampling is 50 times the fastest mode.
-    t = Vector(0:dt:tmax);
+    t = 0:dt:tmax;
     y = ImpulseResponse(sys,no,ni,t);
-    return(t,y);
+    return t,y
 end
 
-function ImpulseResponse(sys::StateSpace,no::Integer,ni::Integer,t::Vector{AbstractFloat})::Vector{AbstractFloat}
-    y = similar(t);
+function ImpulseResponse(sys::StateSpace,no::Integer,ni::Integer,t)
     B = sys.B[:,ni];
     C = reshape(sys.C[no,:],1,length(sys.C[no,:])); # Must ensure row vector
-    for i=1:length(t)
-        y[i] = (C*exp(sys.A*t[i])*B)[1];
-    end
-    return(y);
+    y = t->C*exp(sys.A*t)*B;
+    return vcat(y.(t)...)
 end
 
-function InitialResponse(sys::StateSpace,x0::Vector{AbstractFloat})::Tuple{Vector{AbstractFloat}, Matrix{AbstractFloat}}
+function InitialResponse(sys::StateSpace,x0)
     l,ev = eigen(sys.A);
     lmin = minimum(abs.(l)); # Find the slowest mode
     lmax = maximum(abs.(l)); # Find the fastest mode
@@ -121,10 +101,7 @@ function InitialResponse(sys::StateSpace,x0::Vector{AbstractFloat})::Tuple{Vecto
     return(t,y);
 end
 
-function InitialResponse(sys::StateSpace,x0::Vector{AbstractFloat},t::Vector{AbstractFloat})::Matrix{AbstractFloat}
-    y = Matrix{AbstractFloat}(undef,length(t),length(x0));
-    for i=1:length(t)
-        y[i,:] = reshape(exp(sys.A*t[i])*x0,1,length(x0));
-    end
-    return(y);
+function InitialResponse(sys::StateSpace,x0,t)
+    y = t-> exp(sys.A*t)*x0;
+    return vcat(y.(t)'...)
 end
