@@ -2,7 +2,7 @@
 using LinearAlgebra
 
 # Frequency response at user specified frequencies
-function FrequencyResponse(sys::StateSpace,no::Integer,ni::Integer, Om::Array{Float64,1})::Vector{ComplexF64}
+function FrequencyResponse(sys::StateSpace,no::Integer,ni::Integer, Om::Array{AbstractFloat,1})::Vector{ComplexF64}
     CheckIODimensions(sys,no,ni);
 
     B = sys.B[:,ni];
@@ -18,7 +18,7 @@ function FrequencyResponse(sys::StateSpace,no::Integer,ni::Integer, Om::Array{Fl
 end
 
 # Frequency response with no user specified om. This makes an adhoc grid between [1E-3 100*wn.max], with 300 points.
-function FrequencyResponse(sys::StateSpace,no::Integer,ni::Integer)::Tuple{Array{Complex{Float64},1},Array{Float64,1}}
+function FrequencyResponse(sys::StateSpace,no::Integer,ni::Integer)::Tuple{Array{Complex{AbstractFloat},1},Array{AbstractFloat,1}}
 
     CheckIODimensions(sys,no,ni);
 
@@ -38,7 +38,7 @@ function FrequencyResponse(sys::StateSpace,no::Integer,ni::Integer)::Tuple{Array
     return(TF,Om);
 end
 
-function StepResponse(sys::StateSpace,no::Integer,ni::Integer)::Tuple{Array{Float64,1}, Array{Float64,1}}
+function StepResponse(sys::StateSpace,no::Integer,ni::Integer)::Tuple{Array{AbstractFloat,1}, Array{AbstractFloat,1}}
     l,ev = eigen(sys.A);
     lmin = minimum(abs.(l)); # Find the slowest mode
     lmax = maximum(abs.(l)); # Find the fastest mode
@@ -50,13 +50,13 @@ function StepResponse(sys::StateSpace,no::Integer,ni::Integer)::Tuple{Array{Floa
     return(t,y);
 end
 
-function StepResponse(sys::StateSpace,no::Integer,ni::Integer,t::Vector{Float64})::Vector{Float64}
+function StepResponse(sys::StateSpace,no::Integer,ni::Integer,t::Vector{AbstractFloat})::Vector{AbstractFloat}
     u = ones(length(t));
     y = ForcedResponse(sys,no,ni,t,u);
     return(y);
 end
 
-function ForcedResponse(sys::StateSpace,no::Integer,ni::Integer,t::Vector{Float64},u::Vector{Float64},x0::Vector{Float64}=Array{Float64}(undef,0))::Vector{Float64}
+function ForcedResponse(sys::StateSpace,no::Integer,ni::Integer,t::Vector{AbstractFloat},u::Vector{AbstractFloat},x0::Vector{AbstractFloat}=Array{AbstractFloat}(undef,0))::Vector{AbstractFloat}
     CheckIODimensions(sys,no,ni);
 
     # Obtain a discrete-time system.
@@ -89,7 +89,7 @@ function ForcedResponse(sys::StateSpace,no::Integer,ni::Integer,t::Vector{Float6
     return(y);
 end
 
-function ImpulseResponse(sys::StateSpace,no::Integer,ni::Integer)::Tuple{Array{Float64,1}, Array{Float64,1}}
+function ImpulseResponse(sys::StateSpace,no::Integer,ni::Integer)::Tuple{Array{AbstractFloat,1}, Array{AbstractFloat,1}}
     l,ev = eigen(sys.A);
     lmin = minimum(abs.(l)); # Find the slowest mode
     lmax = maximum(abs.(l)); # Find the fastest mode
@@ -100,7 +100,7 @@ function ImpulseResponse(sys::StateSpace,no::Integer,ni::Integer)::Tuple{Array{F
     return(t,y);
 end
 
-function ImpulseResponse(sys::StateSpace,no::Integer,ni::Integer,t::Vector{Float64})::Vector{Float64}
+function ImpulseResponse(sys::StateSpace,no::Integer,ni::Integer,t::Vector{AbstractFloat})::Vector{AbstractFloat}
     y = similar(t);
     B = sys.B[:,ni];
     C = reshape(sys.C[no,:],1,length(sys.C[no,:])); # Must ensure row vector
@@ -110,7 +110,7 @@ function ImpulseResponse(sys::StateSpace,no::Integer,ni::Integer,t::Vector{Float
     return(y);
 end
 
-function InitialResponse(sys::StateSpace,x0::Vector{Float64})::Tuple{Vector{Float64}, Matrix{Float64}}
+function InitialResponse(sys::StateSpace,x0::Vector{AbstractFloat})::Tuple{Vector{AbstractFloat}, Matrix{AbstractFloat}}
     l,ev = eigen(sys.A);
     lmin = minimum(abs.(l)); # Find the slowest mode
     lmax = maximum(abs.(l)); # Find the fastest mode
@@ -121,8 +121,8 @@ function InitialResponse(sys::StateSpace,x0::Vector{Float64})::Tuple{Vector{Floa
     return(t,y);
 end
 
-function InitialResponse(sys::StateSpace,x0::Vector{Float64},t::Vector{Float64})::Matrix{Float64}
-    y = Matrix{Float64}(undef,length(t),length(x0));
+function InitialResponse(sys::StateSpace,x0::Vector{AbstractFloat},t::Vector{AbstractFloat})::Matrix{AbstractFloat}
+    y = Matrix{AbstractFloat}(undef,length(t),length(x0));
     for i=1:length(t)
         y[i,:] = reshape(exp(sys.A*t[i])*x0,1,length(x0));
     end

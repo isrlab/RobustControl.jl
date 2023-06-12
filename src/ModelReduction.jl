@@ -8,7 +8,7 @@ function BalancedReduction(S::StateSpace)::StateSpace
     # Todo
 end
 
-function HankelSVD(S::StateSpace)::Vector{Float64}
+function HankelSVD(S::StateSpace)::Vector{AbstractFloat}
     # Todo
 end
 
