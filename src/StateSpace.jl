@@ -1,13 +1,13 @@
 mutable struct StateSpace
-    A::Matrix{Float64}
-    B::Matrix{Float64}
-    C::Matrix{Float64}
-    D::Matrix{Float64}
+    A::Matrix{AbstractFloat}
+    B::Matrix{AbstractFloat}
+    C::Matrix{AbstractFloat}
+    D::Matrix{AbstractFloat}
     ns::Integer
     nu::Integer
     ny::Integer
 
-    function StateSpace(A::Array, B::Array, C::Array, D::Array=Array{Float64,2}(undef,0,2))::StateSpace
+    function StateSpace(A::Array, B::Array, C::Array, D::Array=Array{AbstractFloat,2}(undef,0,2))::StateSpace
         this = new();
 
         this.ns = size(A)[1];
@@ -44,7 +44,7 @@ function Poles(S::StateSpace)
     return lam;
 end
 
-function NaturalFrequencies(S::StateSpace)::Vector{Float64}
+function NaturalFrequencies(S::StateSpace)::Vector{AbstractFloat}
     lam = Poles(S);
     ri = real.(lam);
     ii = imag.(lam);
@@ -52,7 +52,7 @@ function NaturalFrequencies(S::StateSpace)::Vector{Float64}
     return(om);
 end
 
-function Damping(S::StateSpace)::Vector{Float64}
+function Damping(S::StateSpace)::Vector{AbstractFloat}
     lam = Poles(S);
     ri = real.(lam);
     ii = imag.(lam);
@@ -63,10 +63,10 @@ end
 
 function rifd(S::StateSpace,printFlag::Bool=false)
     lam = Poles(S);
-    rr = Vector{Float64}(undef,length(lam));
-    ii = Vector{Float64}(undef,length(lam));
-    om = Vector{Float64}(undef,length(lam));
-    d = Vector{Float64}(undef,length(lam));
+    rr = Vector{AbstractFloat}(undef,length(lam));
+    ii = Vector{AbstractFloat}(undef,length(lam));
+    om = Vector{AbstractFloat}(undef,length(lam));
+    d = Vector{AbstractFloat}(undef,length(lam));
     if printFlag
         @printf("   Real \t   Imag \t  Omega \t  Damping\n")
     end
@@ -82,7 +82,7 @@ function rifd(S::StateSpace,printFlag::Bool=false)
     return(rr,ii,om,d)
 end
 
-function TransmissionZeros(S::StateSpace,no::Integer,ni::Integer)::Vector{Float64}
+function TransmissionZeros(S::StateSpace,no::Integer,ni::Integer)::Vector{AbstractFloat}
 
     CheckIODimensions(S,no,ni);
 
@@ -90,16 +90,16 @@ function TransmissionZeros(S::StateSpace,no::Integer,ni::Integer)::Vector{Float6
     C = reshape(S.C[no,:],1,length(S.C[no,:])); # Must ensure row vector
     D = S.D[no,ni];
     L = [S.A B; C D];
-    II = Matrix{Float64}(I, size(S.A)[1], size(S.A)[2]);
+    II = Matrix{AbstractFloat}(I, size(S.A)[1], size(S.A)[2]);
     M = [II 0*B;0*C 0*D];
     e,v = eigen(L,M);
     z = filter(x-> x!=Inf,e)
     return z;
 end
 
-function DCGain(S::StateSpace)::Matrix{Float64}
+function DCGain(S::StateSpace)::Matrix{AbstractFloat}
     lam = Poles(S);
-    PolesAtOrigin = filter(x->x==eps(Float64),abs.(lam));
+    PolesAtOrigin = filter(x->x==eps(AbstractFloat),abs.(lam));
     if isempty(PolesAtOrigin)
         return(S.D - S.C*inv(S.A)*S.B);
     else
@@ -107,8 +107,8 @@ function DCGain(S::StateSpace)::Matrix{Float64}
     end
 end
 
-function ControllabilityMatrix(S::StateSpace)::Matrix{Float64}
-    R = Matrix{Float64}(undef,S.ns,S.ns*S.nu);
+function ControllabilityMatrix(S::StateSpace)::Matrix{AbstractFloat}
+    R = Matrix{AbstractFloat}(undef,S.ns,S.ns*S.nu);
     for i=0:(S.ns-1)
         i1 = i*S.nu+1;
         i2 = (i+1)*S.nu;
@@ -117,8 +117,8 @@ function ControllabilityMatrix(S::StateSpace)::Matrix{Float64}
     return(R);
 end
 
-function ObservabilityMatrix(S::StateSpace)::Matrix{Float64}
-    R = Matrix{Float64}(undef,S.ns*S.ny,S.ns);
+function ObservabilityMatrix(S::StateSpace)::Matrix{AbstractFloat}
+    R = Matrix{AbstractFloat}(undef,S.ns*S.ny,S.ns);
     for i=0:(S.ns-1)
         i1 = i*S.ny+1;
         i2 = (i+1)*S.ny;
