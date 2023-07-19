@@ -114,23 +114,11 @@ function DCGain(S::StateSpace)
 end
 
 function ControllabilityMatrix(S::StateSpace)
-    R = Matrix{AbstractFloat}(undef,S.ns,S.ns*S.nu);
-    for i=0:(S.ns-1)
-        i1 = i*S.nu+1;
-        i2 = (i+1)*S.nu;
-        R[:,i1:i2] = S.A^i*S.B;
-    end
-    return(R);
+    return hcat([S.A^i*S.B for i in 0:(S.ns-1)]...)
 end
 
 function ObservabilityMatrix(S::StateSpace)
-    R = Matrix{AbstractFloat}(undef,S.ns*S.ny,S.ns);
-    for i=0:(S.ns-1)
-        i1 = i*S.ny+1;
-        i2 = (i+1)*S.ny;
-        R[i1:i2,:] = S.C*S.A^i;
-    end
-    return(R);
+    return hcat([S.C*S.A^i for i in 0:(S.ns-1)]...)
 end
 
 function IsControllable(S::StateSpace)

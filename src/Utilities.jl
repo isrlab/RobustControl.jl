@@ -15,3 +15,12 @@ function logspace(x1::T,x2::T,N::Integer) where T<: Real
         return(exp.(x));
     end
 end
+
+function IsSquareMatrix(M::Matrix)
+    n1,n2 = size(M)
+    if n1 == n2
+        return true
+    else
+        return false
+    end
+end
